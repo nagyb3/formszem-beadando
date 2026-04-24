@@ -132,15 +132,19 @@ Proof.
    Tipp: Szukseged lehet a fenti ket lemmara!
 *)
   intro a.
-  induction a.
+  induction a; intro.
+  (* ALit: *)
   * simpl. reflexivity.
+  (* AVar: *)
   * simpl. reflexivity.
-  * simpl in *. intro s. rewrite IHa1, IHa2. reflexivity.
-  * simpl in *; intro s. destruct a2.
+  (* APlus: *)
+  * simpl. rewrite IHa1, IHa2. reflexivity.
+  (* ALet: *)
+  * simpl. destruct a2.
     - reflexivity.
     - destruct (string_dec x s0).
-      + simpl in *. rewrite e. apply update_eq.
-      + simpl in *. rewrite IHa1. reflexivity.
+      + simpl. rewrite e. apply update_eq.
+      + simpl. rewrite IHa1. reflexivity.
     - simpl in *. rewrite IHa1. rewrite <- IHa2. reflexivity.
     - simpl. rewrite IHa1. rewrite <- IHa2. reflexivity.
 Qed.
@@ -344,7 +348,7 @@ Proof.
       - apply seval_plus_rhs_any. apply IHa2.
       - eapply seval_trans.
         ** apply seval_plus.
-        ** apply seval_refl.
+        ** simpl. apply seval_refl.
   * intro. eapply smallstep_trans.
     + apply seval_let_lhs_any. apply IHa1.
     + eapply smallstep_trans.
